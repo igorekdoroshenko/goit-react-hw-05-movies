@@ -2,7 +2,7 @@ import { useLocation } from 'react-router-dom';
 import { FilmList, FilmItem, FilmLink } from './List.styled';
 
 
-const List = ({ films }) => {
+const Lists = ({ films }) => {
   const location = useLocation();
 
   return (
@@ -18,4 +18,4 @@ const List = ({ films }) => {
   );
 };
 
-export default List;
+export default Lists;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import List from 'components/List/List';
+import Lists from 'components/List/List';
 import { getTrending } from 'service/tmdbApi';
 
 const Home = () => {
@@ -20,7 +20,7 @@ const Home = () => {
   return (
     <main>
       <h1>Trending today</h1>
-      <List films={films} />
+      <Lists films={films} />
     </main>
   );
 };

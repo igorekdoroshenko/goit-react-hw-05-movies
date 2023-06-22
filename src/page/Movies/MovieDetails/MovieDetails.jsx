@@ -7,93 +7,86 @@
 
 // export default MovieDetails;
 
-import { useEffect, useState } from 'react';
-import { useParams, Link, Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation, useParams, NavLink } from 'react-router-dom';
 import { movieDetailsApi } from 'service/tmdbApi';
+import { Suspense, useEffect, useRef, useState } from 'react';
+import { isEmpty } from 'lodash';
 
 const MovieDetails = () => {
   const { movieId } = useParams();
-  const [movieInfo, setMovieInfo] = useState(null);
+
+  const [filmInfo, setFilmInfo] = useState({});
+
   const location = useLocation();
+  const goBackHref = useRef(location.state?.from || '/');
+  console.log(goBackHref);
 
   useEffect(() => {
-    const fetchMovieDetailsFilms = () => {
-      
-      movieDetailsApi(movieId)
-        .then(detailMovie => {
-          setMovieInfo(detailMovie);
-        })
-        .catch(error => {
-          console.log(error);
-        })
-        ;
-    };
-
-    fetchMovieDetailsFilms();
+    try {
+      movieDetailsApi(movieId).then(res => setFilmInfo(res));
+    } catch (error) {
+      console.log(error);
+    }
   }, [movieId]);
 
-  if (!movieInfo) {
-    return;
-  }
-
-  const {
-    title,
-    release_date,
-    popularity,
-    overview,
-    genres,
-    poster_path,
-    original_title,
-  } = movieInfo || {};
+  let source = '';
+  if (!filmInfo.poster_path) {
+    source =
+      'https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-38-picture-grey-c2ebdbb057f2a7614185931650f8cee23fa137b93812ccb132b9df511df1cfac.svg';
+  } else source = `https://image.tmdb.org/t/p/w500/${filmInfo.poster_path}`;
 
   return (
-    <>
-      <Link to={location.state?.from ?? '/'}>
-        <button type="button">Go back</button>
-      </Link>
-      
-      {movieInfo && (
-        <div>
-          <img
-            width="300px"
-            src={
-              poster_path
-                ? `https://image.tmdb.org/t/p/w500${poster_path}`
-                : `https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg`
-            }
-            alt={original_title}
-          />
+    <div>
+      <Link to={goBackHref.current}>Go back ←</Link>
+      {!isEmpty(filmInfo) && (
+        <>
           <div>
-            <h1>
-              {title} ({release_date.slice(0, 4)})
-            </h1>
-            <p>User score: {popularity}</p>
-            <h2>Overview</h2>
-            <p>{overview}</p>
-            <h2>Genres</h2>
-            <ul>
-              {genres.map(genre => (
-                <li key={genre.id}>{genre.name}</li>
-              ))}
-            </ul>
+            <img src={source} alt="poster" width="300px" />
+            <div>
+              <h1>
+                {filmInfo.title}
+
+                {filmInfo.release_date && (
+                  <span
+                    style={{
+                      padding: '0px 10px',
+                      color: '#a01d1d',
+                    }}
+                  >
+                    ({filmInfo.release_date.slice(0, 4)})
+                  </span>
+                )}
+              </h1>
+
+              <p>User score: {Math.round(filmInfo.vote_average * 10) + '%'}</p>
+              <b>Overview</b>
+              <p>{filmInfo.overview}</p>
+              <b>Genres</b>
+              <p>
+                {filmInfo.genres.length > 0
+                  ? filmInfo.genres.map(genre => genre.name).join(', ')
+                  : 'No information about genres'}
+              </p>
+            </div>
           </div>
-        </div>
+          <div>
+            <h2>Additional information</h2>
+            <ul>
+              <li>
+                <NavLink to="cast">Cast</NavLink>
+              </li>
+              <li>
+                <NavLink to="reviews">Reviews</NavLink>
+              </li>
+            </ul>
+
+            <Suspense>
+              <Outlet />
+            </Suspense>
+          </div>
+        </>
       )}
-      <hr />
-      <div>
-        <h3>Additional information</h3>
-        <ul>
-          <li>
-            <Link to="cast">Cast</Link>
-          </li>
-          <li>
-            <Link to="reviews">Reviews</Link>
-          </li>
-        </ul>
-        <hr />
-        <Outlet />
-      </div>
-    </>
+    </div>
   );
 };
 

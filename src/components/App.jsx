@@ -6,11 +6,11 @@ import Layout from './Layout/Layout';
 // import MovieDetails from 'page/Movies/MovieDetails/MovieDetails';
 // import Cast from './Cast/Cast';
 // import Reviews from './Reviews/Reviews';
-
+const Cast = lazy(() => import('components/Cast/Cast'));
 const Home = lazy(() => import('page/Home/Home'));
 const Movies = lazy(() => import('page/Movies/Movies'));
 const MovieDetails = lazy(() => import('page/Movies/MovieDetails/MovieDetails'));
-const Cast = lazy(() => import('./Cast/Cast'));
+// const Cast = lazy(() => import('./Cast/Cast'));
 // const Cast = lazy(() => import('./Cast/Cast'));
 const Reviews = lazy(() => import('./Reviews/Reviews'));
 
@@ -26,7 +26,7 @@ const App = () => {
         
         <Route path="/movies/:movieId" element={<MovieDetails />}>
           {/* <Route path="/movies/:movieId/cast" element={<Cast />}/> */}
-          <Route path="/movies/:movieId/cast" element={<Cast />}/>
+          <Route path="/movies/:movieId/cast" element={<Cast />} />
           <Route path="/movies/:movieId/reviews" element={<Reviews />}/>
         </Route>
 

@@ -9,6 +9,7 @@ import { movieDetailsApi } from 'service/tmdbApi';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { isEmpty } from 'lodash';
 import { MovieWrapper, MovieText, MovieList, MovieLink, MovieItem } from './MovieDetails.styled';
+import Loader from 'components/Loader/Loader';
 
 
 const MovieDetails = () => {
@@ -68,7 +69,7 @@ const MovieDetails = () => {
               </MovieItem>
             </MovieList>
 
-            <Suspense>
+            <Suspense fallback={<Loader />}>
               <Outlet />
             </Suspense>
           </div>

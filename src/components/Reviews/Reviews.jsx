@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { movieReviews } from 'service/tmdbApi';
-
+import { List } from './Reviews.styled';
 
 
 const Reviews = () => {
@@ -10,7 +10,7 @@ const Reviews = () => {
   
 
   useEffect(() => {
-    const fetchReviewsFilms = () => {
+    const reviewsFilms = () => {
       
 
       movieReviews(movieId)
@@ -23,7 +23,7 @@ const Reviews = () => {
         ;
     };
 
-    fetchReviewsFilms();
+    reviewsFilms();
   }, [movieId]);
 
   return (
@@ -31,14 +31,14 @@ const Reviews = () => {
       
       {reviews.length !== 0 && (
         <div>
-          <ul>
+          <List>
             {reviews.map(review => (
               <li key={review.id}>
                 <h2>Author: {review.author}</h2>
                 <p>{review.content}</p>
               </li>
             ))}
-          </ul>
+          </List>
         </div>
       )}
       {reviews.length === 0 && (

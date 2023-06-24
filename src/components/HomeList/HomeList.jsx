@@ -1,8 +1,9 @@
 import { useLocation } from 'react-router-dom';
-import { FilmList, FilmItem, FilmLink } from './List.styled';
+import { FilmList, FilmItem, FilmLink } from './HomeList.styled';
+import PropTypes from 'prop-types';
 
 
-const Lists = ({ films }) => {
+const HomeList = ({ films }) => {
   const location = useLocation();
 
   return (
@@ -18,4 +19,13 @@ const Lists = ({ films }) => {
   );
 };
 
-export default Lists;
+HomeList.propTypes = {
+  films: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      id: PropTypes.number.isRequired,
+    })
+  ),
+};
+
+export default HomeList;

@@ -1,84 +1,72 @@
-// import { useParams } from 'react-router-dom';
-
-// const MovieDetails = () => {
-//     const { movieId } = useParams();
-//     return <>MovieDetails:{movieId}</>
-// }
-
-// export default MovieDetails;
-
-import { Link, Outlet, useLocation, useParams, NavLink } from 'react-router-dom';
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useParams,
+  
+} from 'react-router-dom';
 import { movieDetailsApi } from 'service/tmdbApi';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { isEmpty } from 'lodash';
+import { MovieWrapper, MovieText, MovieList, MovieLink, MovieItem } from './MovieDetails.styled';
+
 
 const MovieDetails = () => {
   const { movieId } = useParams();
 
-  const [filmInfo, setFilmInfo] = useState({});
+  const [movieInfo, setMovieInfo] = useState({});
 
   const location = useLocation();
-  const goBackHref = useRef(location.state?.from || '/');
-  console.log(goBackHref);
+  const goBack = useRef(location.state?.from || '/');
+  
 
   useEffect(() => {
     try {
-      movieDetailsApi(movieId).then(res => setFilmInfo(res));
+      movieDetailsApi(movieId).then(res => setMovieInfo(res));
     } catch (error) {
       console.log(error);
     }
   }, [movieId]);
 
   let source = '';
-  if (!filmInfo.poster_path) {
+  if (!movieInfo.poster_path) {
     source =
       'https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-38-picture-grey-c2ebdbb057f2a7614185931650f8cee23fa137b93812ccb132b9df511df1cfac.svg';
-  } else source = `https://image.tmdb.org/t/p/w500/${filmInfo.poster_path}`;
+  } else source = `https://image.tmdb.org/t/p/w500/${movieInfo.poster_path}`;
 
   return (
     <div>
-      <Link to={goBackHref.current}>Go back ←</Link>
-      {!isEmpty(filmInfo) && (
+      <Link to={goBack.current}>Go back ←</Link>
+      {!isEmpty(movieInfo) && (
         <>
-          <div>
+          <MovieWrapper>
             <img src={source} alt="poster" width="300px" />
-            <div>
+            <MovieText>
               <h1>
-                {filmInfo.title}
-
-                {filmInfo.release_date && (
-                  <span
-                    style={{
-                      padding: '0px 10px',
-                      color: '#a01d1d',
-                    }}
-                  >
-                    ({filmInfo.release_date.slice(0, 4)})
-                  </span>
-                )}
+                {movieInfo.title} ({movieInfo.release_date.slice(0, 4)})
               </h1>
 
-              <p>User score: {Math.round(filmInfo.vote_average * 10) + '%'}</p>
-              <b>Overview</b>
-              <p>{filmInfo.overview}</p>
-              <b>Genres</b>
+              <p>User score: {Math.round(movieInfo.vote_average * 10) + '%'}</p>
+              <h2>Overview</h2>
+              <p>{movieInfo.overview}</p>
+              <h2>Genres</h2>
               <p>
-                {filmInfo.genres.length > 0
-                  ? filmInfo.genres.map(genre => genre.name).join(', ')
+                {movieInfo.genres.length > 0
+                  ? movieInfo.genres.map(genre => genre.name).join(', ')
                   : 'No information about genres'}
               </p>
-            </div>
-          </div>
+            </MovieText>
+          </MovieWrapper>
           <div>
-            <h2>Additional information</h2>
-            <ul>
-              <li>
-                <NavLink to="cast">Cast</NavLink>
-              </li>
-              <li>
-                <NavLink to="reviews">Reviews</NavLink>
-              </li>
-            </ul>
+            <h3>Additional information</h3>
+            <MovieList>
+              <MovieItem>
+                <MovieLink to="cast">Cast</MovieLink>
+              </MovieItem>
+              <MovieItem>
+                <MovieLink to="reviews">Reviews</MovieLink>
+              </MovieItem>
+            </MovieList>
 
             <Suspense>
               <Outlet />
@@ -89,5 +77,7 @@ const MovieDetails = () => {
     </div>
   );
 };
+
+
 
 export default MovieDetails;

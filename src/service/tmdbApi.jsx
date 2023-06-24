@@ -9,10 +9,14 @@ export const getTrending = async () => {
 };
 
 export const moviesSearch = async query => {
-    const BASE_URL = 'https://api.themoviedb.org/3/search/movie';
-    const response = await axios.get(`${BASE_URL}?api_key=${API_KEY}&query=${query}&include_adult=false&language=en-US&page=1`);
-    return response.data.results;
-}
+  const BASE_URL = `https://api.themoviedb.org/3/search/movie`;
+
+  const response = await axios.get(
+    `${BASE_URL}?api_key=${API_KEY}&query=${query}&page=1`
+  );
+
+  return response.data;
+};
 
 export const movieDetailsApi = async movieId => {
     const BASE_URL = 'https://api.themoviedb.org/3/movie/'

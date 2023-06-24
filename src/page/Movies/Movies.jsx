@@ -1,34 +1,47 @@
-import { useState } from 'react';
-import Lists from 'components/List/List';
-import Form from 'components/Form/Form';
+import SearchForm from 'components/SearchForm/SearchForm';
+import SearchResults from 'components/SearchResults/SearchResults';
+import { useState, useEffect } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
+
 import { moviesSearch } from 'service/tmdbApi';
-import { useLocation } from 'react-router-dom';
 
 const Movies = () => {
-  const [searchFilms, setSearchFilms] = useState([]);
-  const [searchText, setSearchText] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+
+  const [searchQuery, setSearchQuery] = useSearchParams();
+  const query = searchQuery.get('query') ?? '';
+
   const location = useLocation();
 
-  const searchMovies = queryMovie => {
-    moviesSearch(queryMovie)
-      .then(searchResults => {
-        setSearchFilms(searchResults);
-        setSearchText(searchResults.length === 0);
-      })
-      .catch(error => {
-        console.log(error);
-      }) 
-    console.log(location);
-  }
-  return (
-    <main>
-      <Form searchMovies={searchMovies} location={location} />
-      {searchText && (
-        <p>There is no movies with this request. Please, try again</p>
-      )}
-      {searchFilms && <Lists films={searchFilms} location={location} />}
-    </main>
+  const handleFormSubmit = searchQueryFromForm => {
+    setSearchQuery(
+      searchQueryFromForm !== '' ? { query: searchQueryFromForm } : {}
+    );
+  };
 
+  useEffect(() => {
+    if (query) {
+      try {
+        moviesSearch(query).then(res => {
+          setSearchResults([...res.results]);
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [query]);
+
+  return (
+    <>
+      <div>
+        <SearchForm onSubmit={handleFormSubmit} />
+        <SearchResults
+          searchResults={searchResults}
+          query={query}
+          location={location}
+        />
+      </div>
+    </>
   );
 };
 

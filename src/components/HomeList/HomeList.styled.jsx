@@ -8,8 +8,8 @@ export const FilmList = styled.ul`
 
 export const FilmItem = styled.li`
   font-weight: 600;
-  font-size: 18px;
-  margin-bottom: 10px;
+  font-size: 16px;
+  margin-bottom: 8px;
 `;
 
 export const FilmLink = styled(Link)`
@@ -17,7 +17,7 @@ export const FilmLink = styled(Link)`
   color: black;
 
   &:hover {
-    color: red;
+    color: #750000;
   }
 `;
 

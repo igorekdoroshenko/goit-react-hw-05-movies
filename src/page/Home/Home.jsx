@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Lists from 'components/List/List';
+import HomeList from 'components/HomeList/HomeList';
 import { getTrending } from 'service/tmdbApi';
+
 
 const Home = () => {
   const [films, setFilms] = useState([]);
@@ -18,10 +19,10 @@ const Home = () => {
     getTrendingFilms();
   }, []);
   return (
-    <main>
+    <div>
       <h1>Trending today</h1>
-      <Lists films={films} />
-    </main>
+      <HomeList films={films} />
+    </div>
   );
 };
 

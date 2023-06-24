@@ -1,18 +1,14 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { movieActors } from 'service/tmdbApi';
-
-
+import { List, Text } from './Cast.styled';
 
 const Cast = () => {
   const { movieId } = useParams();
   const [actors, setActors] = useState([]);
-  
 
   useEffect(() => {
-    const onActorsOfMovie = () => {
-      
-
+    const actorsFilms = () => {
       movieActors(movieId)
         .then(actors => {
           setActors(actors);
@@ -22,29 +18,28 @@ const Cast = () => {
         });
     };
 
-    onActorsOfMovie();
+    actorsFilms();
   }, [movieId]);
 
   return (
     <div>
-      
-      <ul>
+      <List>
         {actors.map(({ id, profile_path, original_name, name, character }) => (
           <li key={id}>
             <img
-              width="200px"
               src={
                 profile_path
                   ? `https://image.tmdb.org/t/p/w500${profile_path}`
-                  : `https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg`
+                  : 'https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-38-picture-grey-c2ebdbb057f2a7614185931650f8cee23fa137b93812ccb132b9df511df1cfac.svg'
               }
               alt={original_name}
+              width="200px"
             />
-            <p>{name}</p>
+            <Text>{name}</Text>
             <p>Character: {character}</p>
           </li>
         ))}
-      </ul>
+      </List>
     </div>
   );
 };

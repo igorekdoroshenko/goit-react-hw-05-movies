@@ -1,6 +1,5 @@
 import { useParams } from 'react-router-dom';
 
-// import { getMovieCredits } from 'services/api';
 import { useEffect, useState } from 'react';
 import { isEmpty } from 'lodash';
 import { CastWrapper } from './Cast.styled';

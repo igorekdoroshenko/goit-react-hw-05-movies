@@ -62,7 +62,7 @@ const MovieDetails = () => {
             <h3>Additional information</h3>
             <MovieList>
               <MovieItem>
-                <MovieLink to="cast">Cast</MovieLink>
+                <MovieLink to="casts">Casts</MovieLink>
               </MovieItem>
               <MovieItem>
                 <MovieLink to="reviews">Reviews</MovieLink>

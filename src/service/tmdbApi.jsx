@@ -24,11 +24,14 @@ export const movieDetailsApi = async movieId => {
   return response.data;
 };
 
-export const movieActors = async movieId => {
-    const BASE_URL = 'https://api.themoviedb.org/3/movie/'
-    const response = await axios.get(`${BASE_URL}/${movieId}/credits?api_key=${API_KEY}&language=en-US`);
-    return response.data.cast;
-}
+export const movieActors = async id => {
+  const BASE_URL = `https://api.themoviedb.org/3/movie/`;
+  const response = await axios.get(
+    `${BASE_URL}/${id}/credits?api_key=${API_KEY}`
+  );
+
+  return response.data;
+};
 
 export const movieReviews = async movieId => {
     const BASE_URL = 'https://api.themoviedb.org/3/movie/'

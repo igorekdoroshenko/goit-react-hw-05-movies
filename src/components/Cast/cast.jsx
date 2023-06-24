@@ -1,46 +1,51 @@
 import { useParams } from 'react-router-dom';
+
+// import { getMovieCredits } from 'services/api';
 import { useEffect, useState } from 'react';
+import { isEmpty } from 'lodash';
+import { CastWrapper } from './Cast.styled';
 import { movieActors } from 'service/tmdbApi';
-import { List, Text } from './Cast.styled';
 
 const Cast = () => {
   const { movieId } = useParams();
-  const [actors, setActors] = useState([]);
+
+  const [filmCast, setFilmCast] = useState([]);
 
   useEffect(() => {
-    const actorsFilms = () => {
-      movieActors(movieId)
-        .then(actors => {
-          setActors(actors);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    };
-
-    actorsFilms();
+    try {
+      movieActors(movieId).then(res => setFilmCast(res.cast.splice(0, 8)));
+    } catch (error) {
+      console.log(error);
+    }
   }, [movieId]);
 
   return (
-    <div>
-      <List>
-        {actors.map(({ id, profile_path, original_name, name, character }) => (
-          <li key={id}>
-            <img
-              width="200px"
-              src={
-                profile_path
-                  ? `https://image.tmdb.org/t/p/w500${profile_path}`
-                  : `https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg`
-              }
-              alt={original_name}
-            />
-            <Text>{name}</Text>
-            <p>Character: {character}</p>
-          </li>
-        ))}
-      </List>
-    </div>
+    <>
+      {isEmpty(filmCast) ? (
+        <p>We don't have any information about cast for this movie</p>
+      ) : (
+        <>
+          <CastWrapper>
+            {filmCast.map(actor => {
+              let source = '';
+              if (!actor.profile_path) {
+                source =
+                  'https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-4-user-grey-d8fe957375e70239d6abdd549fd7568c89281b2179b5f4470e2e12895792dfa5.svg';
+              } else
+                source = `https://image.tmdb.org/t/p/w500/${actor.profile_path}`;
+              return (
+                <li key={actor.id}>
+                  <img src={source} alt={`${actor.name}`} />
+                  <p>{actor.name}</p>
+                  <em>{actor.character}</em>
+                </li>
+              );
+            })}
+          </CastWrapper>
+        </>
+      )}
+    </>
   );
 };
+
 export default Cast;

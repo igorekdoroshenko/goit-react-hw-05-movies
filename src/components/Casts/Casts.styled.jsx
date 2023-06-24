@@ -1,17 +1,14 @@
-// import styled from '@emotion/styled';
+import styled from '@emotion/styled';
 
-// export const CastWrapper = styled.ul`
-//   display: grid;
-//   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-//   grid-template-rows: 1fr;
-//   gap: 0px 5px;
-//   grid-auto-flow: row;
-//   grid-template-areas: '. . . . . . . .';
-// `;
+export const CastList = styled.ul`
+  
+  list-style-type: none;
+  width:200px;
+  
+`;
 
-// export const CastItem = styled.li`
-//    display: flex;
-//   flex-direction: column;
-
-
-// `;
+export const CastText = styled.p`
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 10px;
+`;
